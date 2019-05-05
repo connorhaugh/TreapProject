@@ -7,10 +7,10 @@ public class Test{
 
   Treap treapee;
   RedBlack rbee;
-  LinkedList <int> treapKeyTracker = new LinkedList <int> ();
-  LinkedList <int> rbKeyTracker = new LinkedList <int> ();
+  LinkedList <Integer> treapKeyTracker = new LinkedList <Integer> ();
+  LinkedList <Integer> rbKeyTracker = new LinkedList <Integer> ();
 
-  public Test (max) {
+  public Test (int max) {
     this.treapee = new Treap();
     this.rbee = new RedBlack();
   }
@@ -18,16 +18,13 @@ public class Test{
   public static void main(String[] args){
     int max = 1000000;
     Test t = new Test(max);
-    /*
+
     UniformDis unifDis = new UniformDis (max);
     int[] unifElems= unifDis.generateUniform(max);
-    ZipfD zipfDis = new ZipfD(max);
-    int[] zipfElems = zipfDis.generateZipf(max);
-    */
 
     try {
-      t.testTreap(max);
-      t.testRB(max);
+      t.testTreap(max, unifElems);
+      t.testRB(max, unifElems);
     }
     catch (IOException io) {
       System.out.println ("File not found.");
@@ -35,7 +32,7 @@ public class Test{
   }
 
 
-  public void testTreap (int max) throws IOException {
+  public void testTreap (int max, int[] elems) throws IOException {
     File fileTreapInsert = new File ("treapInsert.csv");
     File fileTreapDelete = new File ("treapDelete.csv");
     PrintWriter pTreapInsert = new PrintWriter (fileTreapInsert);
@@ -45,13 +42,13 @@ public class Test{
     long[][] timeInsert = new long[100][max];
     for (int i = 0; i < 100; i++) {
       for (int j = 0; j < max; j++) {
-        timeInsert[i][j] = insertTreapTime(max);
+        timeInsert[i][j] = insertTreapTime(elems[j]);
       }
     }
     long[][] timeDelete = new long[100][max];
     for (int i = 0; i < 100; i++) {
-      for (int j = max; j > 0; j--) {
-        timeDelete[i][j] = deleteTreapTime(max);
+      for (int j = 0; j < max; j++) {
+        timeDelete[i][j] = deleteTreapTime();
       }
     }
 
@@ -72,34 +69,34 @@ public class Test{
     pTreapDelete.close();
   }
 
-  public long insertTreapTime (int n) {
+  public long insertTreapTime (int key) {
     long startTime, endTime, runTime;
-    //Uniformly distributed
-    int key = (int)(n*Math.random());
     startTime = System.nanoTime();
+    //Uniformly distributed
+    //int key = (int)(n*Math.random());
     treapee.insert(key);
     endTime = System.nanoTime();
     runTime = endTime - startTime;
     //keyTracker not factored into runTime
-    treapKeyTracker.add(key)
+    treapKeyTracker.add(key);
     return runTime;
   }
 
-  public long deleteTreapTime (int n) {
+  public long deleteTreapTime () {
     long startTime, endTime, runTime;
     //keyTracker not factored into runTime
     int randomKey = (int)(treapKeyTracker.size() * Math.random());
     treapKeyTracker.removeFirstOccurrence(randomKey);
     startTime = System.nanoTime();
     //Uniformly distributed
-    treapee.delete(key);
+    treapee.delete(randomKey);
     endTime = System.nanoTime();
     runTime = endTime - startTime;
     return runTime;
   }
 
 
-  public void testRB(){
+  public void testRB (int max, int[] elems){
     File fileRBInsert = new File ("rbInsert.csv");
     File fileRBDelete = new File ("rbDelete.csv");
 
@@ -110,13 +107,13 @@ public class Test{
     long[][] timeInsert = new long[100][max];
     for (int i = 0; i < 100; i++) {
       for (int j = 0; j < max; j++) {
-        timeInsert[i][j] = insertRBTime(max);
+        timeInsert[i][j] = insertRBTime(elems[j]);
       }
     }
     long[][] timeDelete = new long[100][max];
     for (int i = 0; i < 100; i++) {
       for (int j = 0; j < max; j++) {
-        timeDelete[i][j] = deleteRBTime(max);
+        timeDelete[i][j] = deleteRBTime();
       }
     }
 
@@ -138,29 +135,31 @@ public class Test{
 
   }
 
-  public long insertRBTime (int n) {
+  public long insertRBTime (int key) {
     long startTime, endTime, runTime;
     startTime = System.nanoTime();
     //Uniformly distributed
-    int key = (int)(n*Math.random());
+    //int key = (int)(n*Math.random());
     rbee.insert(key);
     endTime = System.nanoTime();
     runTime = endTime - startTime;
     //keyTracker not factored into runTime
-    rbKeyTracker.add(key)
+    rbKeyTracker.add(key);
     return runTime;
   }
 
-  public long deleteRBTime (int n) {
+  public long deleteRBTime () {
     long startTime, endTime, runTime;
     //keyTracker not factored into runTime
     int randomKey = (int)(rbKeyTracker.size() * Math.random());
     rbKeyTracker.removeFirstOccurrence(randomKey);
     startTime = System.nanoTime();
     //Uniformly distributed
-    rbee.delete(key);
+    rbee.delete(randomKey);
     endTime = System.nanoTime();
     runTime = endTime - startTime;
     return runTime;
   }
+
+
 }
