@@ -103,6 +103,7 @@ public class Treap {
 			root = null;
 		}
 
+		// this loop repeats until the node is deleted
 		while (true) {
 			// case 2: if the node is already a leaf
 			if (toDelete.left == null && toDelete.right == null) {
@@ -136,13 +137,6 @@ public class Treap {
 		}
 	}
 
-	// deletes a node that has only a right child
-	private void deleteRight(Node toDelete) {
-		Node node = toDelete.right;
-		leftRotate(toDelete, node);
-		node.left = null; // cut off the pointer to the node to be deleted
-	}
-
 	// deletes a node that is a leaf
 	public void deleteLeaf(Node toDelete) {
 		if (toDelete.key < toDelete.parent.key) {
@@ -151,8 +145,15 @@ public class Treap {
 			toDelete.parent.right = null;
 		}
 	}
-
-	// deletes a node that has only a left child
+	
+	// deletes a node that has only one child--right child
+	private void deleteRight(Node toDelete) {
+		Node node = toDelete.right;
+		leftRotate(toDelete, node);
+		node.left = null; // cut off the pointer to the node to be deleted
+	}
+	
+	// deletes a node that has only one child--left child
 	public void deleteLeft(Node toDelete) {
 		Node node = toDelete.left;
 		rightRotate(node, toDelete);
