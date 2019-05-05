@@ -28,7 +28,7 @@ public class Test{
 
     try {
       t.testTreap(max);
-      t.testRB(max);
+      //t.testRB(max);
     }
     catch (IOException io) {
       System.out.println ("File not found.");
