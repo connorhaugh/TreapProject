@@ -49,8 +49,7 @@ public class Treap {
 	}
 
 	private int getRandomPrio() {
-		Random r = new Random();
-		return r.nextInt(2147483647);
+		return (int)(2147483647 * Math.random());
 	}
 
 	// returns the node given an input key
