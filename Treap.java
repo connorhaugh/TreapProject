@@ -146,6 +146,7 @@ public class Treap {
 				}
 			}
 		}
+		return;
 	}
 
 	// deletes a node that is a leaf
