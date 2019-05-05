@@ -1,12 +1,18 @@
+import java.util.Random;
 
 public class Treap {
 
-	Node root;
+	TreapNode root;
 
 	// inserts a node
 	// edge case: what if *key* is already in the Treap.
-	public void insert(int key, int prio) {
-		Node toAdd = new Node(key, prio);
+	// to be addressed.
+	public void insert(int key) {
+	
+		// get a randomly generated priority from a uniform distribution.
+		int prio = getRandomPrio(); 
+		
+		TreapNode toAdd = new TreapNode(key, prio);
 
 		// if the Treap is empty, set the node to add as the root
 		if (root == null) {
@@ -15,7 +21,7 @@ public class Treap {
 		}
 
 		// BST insertion
-		Node curNode = root;
+		TreapNode curNode = root;
 
 		while (curNode != null) {
 			if (key < curNode.key) {
@@ -27,7 +33,7 @@ public class Treap {
 		curNode = toAdd;
 
 		// Heap Situp
-		Node parent = toAdd.parent;
+		TreapNode parent = toAdd.parent;
 		int parent_key = parent.key;
 		int parent_prio = parent.prio;
 
@@ -42,8 +48,13 @@ public class Treap {
 		}
 	}
 
+	private int getRandomPrio() {
+		Random r = new Random();
+		return r.nextInt(2147483647);
+	}
+
 	// returns the node given an input key
-	public Node find(int key) {
+	public TreapNode find(int key) {
 		// normal binary search tree-find
 
 		// if the Treap is empty
@@ -53,7 +64,7 @@ public class Treap {
 		}
 
 		// if the Treap is not empty
-		Node curNode = root;
+		TreapNode curNode = root;
 
 		boolean notExist = false; // variable to track if the key can be found
 
@@ -92,7 +103,7 @@ public class Treap {
 		}
 
 		// find the node
-		Node toDelete = find(key);
+		TreapNode toDelete = find(key);
 
 		if (toDelete == null) {
 			return;
@@ -138,24 +149,24 @@ public class Treap {
 	}
 
 	// deletes a node that is a leaf
-	public void deleteLeaf(Node toDelete) {
+	public void deleteLeaf(TreapNode toDelete) {
 		if (toDelete.key < toDelete.parent.key) {
 			toDelete.parent.left = null;
 		} else {
 			toDelete.parent.right = null;
 		}
 	}
-	
+
 	// deletes a node that has only one child--right child
-	private void deleteRight(Node toDelete) {
-		Node node = toDelete.right;
+	private void deleteRight(TreapNode toDelete) {
+		TreapNode node = toDelete.right;
 		leftRotate(toDelete, node);
 		node.left = null; // cut off the pointer to the node to be deleted
 	}
-	
+
 	// deletes a node that has only one child--left child
-	public void deleteLeft(Node toDelete) {
-		Node node = toDelete.left;
+	public void deleteLeft(TreapNode toDelete) {
+		TreapNode node = toDelete.left;
 		rightRotate(node, toDelete);
 		node.right = null; // cut off the pointer to the node to be deleted
 	}
@@ -163,7 +174,7 @@ public class Treap {
 	// rotates once so that
 	// originally, x is the left child of y
 	// after rotation, y is the right child of x
-	public void rightRotate(Node x, Node y) {
+	public void rightRotate(TreapNode x, TreapNode y) {
 
 		// first, check if subtrees exist
 
@@ -196,7 +207,7 @@ public class Treap {
 	// rotates once so that
 	// originally y is the right child of x
 	// after rotation, x is the left child of y
-	public void leftRotate(Node x, Node y) {
+	public void leftRotate(TreapNode x, TreapNode y) {
 
 		// if y has a left subtree;
 		// update left subtree of y to be right subtree of x
