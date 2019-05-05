@@ -7,10 +7,10 @@ public class Test{
 
   Treap treapee;
   RedBlack rbee;
-  LinkedList <int> treapKeyTracker = new LinkedList <int> ();
-  LinkedList <int> rbKeyTracker = new LinkedList <int> ();
+  LinkedList <Integer> treapKeyTracker = new LinkedList <Integer> ();
+  LinkedList <Integer> rbKeyTracker = new LinkedList <Integer> ();
 
-  public Test (max) {
+  public Test (int max) {
     this.treapee = new Treap();
     this.rbee = new RedBlack();
   }
@@ -18,7 +18,8 @@ public class Test{
   public static void main(String[] args){
     int max = 1000000;
     Test t = new Test(max);
-    /*
+
+    */
     UniformDis unifDis = new UniformDis (max);
     int[] unifElems= unifDis.generateUniform(max);
     ZipfD zipfDis = new ZipfD(max);
@@ -50,7 +51,7 @@ public class Test{
     }
     long[][] timeDelete = new long[100][max];
     for (int i = 0; i < 100; i++) {
-      for (int j = max; j > 0; j--) {
+      for (int j = 0; j < max; j++) {
         timeDelete[i][j] = deleteTreapTime(max);
       }
     }
@@ -74,14 +75,14 @@ public class Test{
 
   public long insertTreapTime (int n) {
     long startTime, endTime, runTime;
+    startTime = System.nanoTime();
     //Uniformly distributed
     int key = (int)(n*Math.random());
-    startTime = System.nanoTime();
     treapee.insert(key);
     endTime = System.nanoTime();
     runTime = endTime - startTime;
     //keyTracker not factored into runTime
-    treapKeyTracker.add(key)
+    treapKeyTracker.add(key);
     return runTime;
   }
 
@@ -92,14 +93,14 @@ public class Test{
     treapKeyTracker.removeFirstOccurrence(randomKey);
     startTime = System.nanoTime();
     //Uniformly distributed
-    treapee.delete(key);
+    treapee.delete(randomKey);
     endTime = System.nanoTime();
     runTime = endTime - startTime;
     return runTime;
   }
 
 
-  public void testRB(){
+  public void testRB (int max){
     File fileRBInsert = new File ("rbInsert.csv");
     File fileRBDelete = new File ("rbDelete.csv");
 
@@ -147,7 +148,7 @@ public class Test{
     endTime = System.nanoTime();
     runTime = endTime - startTime;
     //keyTracker not factored into runTime
-    rbKeyTracker.add(key)
+    rbKeyTracker.add(key);
     return runTime;
   }
 
@@ -158,9 +159,11 @@ public class Test{
     rbKeyTracker.removeFirstOccurrence(randomKey);
     startTime = System.nanoTime();
     //Uniformly distributed
-    rbee.delete(key);
+    rbee.delete(randomKey);
     endTime = System.nanoTime();
     runTime = endTime - startTime;
     return runTime;
   }
+
+
 }
