@@ -97,7 +97,7 @@ public class Treap {
 
 		// if the Treap is empty
 		if (root == null) {
-			System.out.println("THe Treap is empty!");
+			System.out.println("The Treap is empty!");
 			return;
 		}
 
