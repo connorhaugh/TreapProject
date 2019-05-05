@@ -1,18 +1,15 @@
-import java.util.Random;
-
 public class Treap {
-
+	
 	TreapNode root;
 
 	// inserts a node
-	// edge case: what if *key* is already in the Treap.
-	// to be addressed.
 	public void insert(int key) {
-	
+
 		// get a randomly generated priority from a uniform distribution.
-		int prio = getRandomPrio(); 
-		
+		int prio = (int) (2147483647 * Math.random());
+
 		TreapNode toAdd = new TreapNode(key, prio);
+		System.out.println(" ( key, prio )  " + key + ", " + prio +" " );
 
 		// if the Treap is empty, set the node to add as the root
 		if (root == null) {
@@ -23,33 +20,38 @@ public class Treap {
 		// BST insertion
 		TreapNode curNode = root;
 
-		while (curNode != null) {
+		boolean done = false;
+		
+		while (!done) {
 			if (key < curNode.key) {
-				curNode = curNode.left;
+				if (curNode.left != null) {
+					curNode = curNode.left;
+				} else {
+					curNode.left = toAdd;
+					toAdd.parent = curNode;
+					done = true;
+				}
+
 			} else {
-				curNode = curNode.right;
+				if (curNode.right != null) {
+					curNode = curNode.right;
+				} else {
+					curNode.right = toAdd;
+					toAdd.parent = curNode;
+					done = true;
+				}
 			}
 		}
-		curNode = toAdd;
 
 		// Heap Situp
-		TreapNode parent = toAdd.parent;
-		int parent_key = parent.key;
-		int parent_prio = parent.prio;
 
-		while (prio > parent_prio) {
-			if (key < parent_key) { // the new node is a left child
-				rightRotate(toAdd, parent);
+		while (toAdd != root && toAdd.prio > toAdd.parent.prio) {
+			if (toAdd.key < toAdd.parent.key) { // the new node is a left child
+				rightRotate(toAdd, toAdd.parent);
 			} else {
-				leftRotate(parent, toAdd);
+				leftRotate(toAdd.parent, toAdd);
 			}
-			parent_key = parent.key;
-			parent_prio = parent.prio;
 		}
-	}
-
-	private int getRandomPrio() {
-		return (int)(2147483647 * Math.random());
 	}
 
 	// returns the node given an input key
@@ -97,7 +99,7 @@ public class Treap {
 
 		// if the Treap is empty
 		if (root == null) {
-			System.out.println("The Treap is empty!");
+			System.out.println("THe Treap is empty!");
 			return;
 		}
 
@@ -146,7 +148,6 @@ public class Treap {
 				}
 			}
 		}
-		return;
 	}
 
 	// deletes a node that is a leaf
@@ -203,6 +204,8 @@ public class Treap {
 		// change pointers of x and y
 		x.right = y;
 		y.parent = x;
+		
+		System.out.println("rightRotation true");
 	}
 
 	// rotates once so that
@@ -234,5 +237,7 @@ public class Treap {
 		// change pointers of x and y
 		y.left = x;
 		x.parent = y;
+		System.out.println("rightRotation true");
 	}
+
 }
