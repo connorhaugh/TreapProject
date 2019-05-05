@@ -111,6 +111,7 @@ public class Treap {
 		// case 1: if the node is root, then just reset root
 		if (toDelete.equals(root)) {
 			root = null;
+			return;
 		}
 
 		// this loop repeats until the node is deleted
