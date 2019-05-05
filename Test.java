@@ -50,7 +50,7 @@ public class Test{
     }
     long[][] timeDelete = new long[100][max];
     for (int i = 0; i < 100; i++) {
-      for (int j = 0; j < max; j++) {
+      for (int j = max; j > 0; j--) {
         timeDelete[i][j] = deleteTreapTime(max);
       }
     }
@@ -74,9 +74,9 @@ public class Test{
 
   public long insertTreapTime (int n) {
     long startTime, endTime, runTime;
-    startTime = System.nanoTime();
     //Uniformly distributed
     int key = (int)(n*Math.random());
+    startTime = System.nanoTime();
     treapee.insert(key);
     endTime = System.nanoTime();
     runTime = endTime - startTime;
