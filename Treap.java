@@ -33,10 +33,8 @@ public class Treap {
 
 		while (prio > parent_prio) {
 			if (key < parent_key) { // the new node is a left child
-				// rightRotate
 				rightRotate(toAdd, parent);
 			} else {
-				// leftRotate
 				leftRotate(parent, toAdd);
 			}
 			parent_key = parent.key;
@@ -100,8 +98,6 @@ public class Treap {
 			return;
 		}
 
-		// rotate the node until it is a leaf
-
 		// case 1: if the node is root, then just reset root
 		if (toDelete.equals(root)) {
 			root = null;
@@ -140,12 +136,14 @@ public class Treap {
 		}
 	}
 
+	// deletes a node that has only a right child
 	private void deleteRight(Node toDelete) {
 		Node node = toDelete.right;
 		leftRotate(toDelete, node);
 		node.left = null; // cut off the pointer to the node to be deleted
 	}
 
+	// deletes a node that is a leaf
 	public void deleteLeaf(Node toDelete) {
 		if (toDelete.key < toDelete.parent.key) {
 			toDelete.parent.left = null;
@@ -154,6 +152,7 @@ public class Treap {
 		}
 	}
 
+	// deletes a node that has only a left child
 	public void deleteLeft(Node toDelete) {
 		Node node = toDelete.left;
 		rightRotate(node, toDelete);
@@ -161,9 +160,9 @@ public class Treap {
 	}
 
 	// rotates once so that
-	// originally x is the left child of y
+	// originally, x is the left child of y
 	// after rotation, y is the right child of x
-	public void leftRotate(Node x, Node y) {
+	public void rightRotate(Node x, Node y) {
 
 		// first, check if subtrees exist
 
@@ -196,7 +195,7 @@ public class Treap {
 	// rotates once so that
 	// originally y is the right child of x
 	// after rotation, x is the left child of y
-	public void rightRotate(Node x, Node y) {
+	public void leftRotate(Node x, Node y) {
 
 		// if y has a left subtree;
 		// update left subtree of y to be right subtree of x
