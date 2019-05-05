@@ -3,6 +3,8 @@ public class Treap {
 
 	Node root;
 
+	// inserts a node
+	// edge case: what if *key* is already in the Treap.
 	public void insert(int key, int prio) {
 		Node toAdd = new Node(key, prio);
 
@@ -55,8 +57,8 @@ public class Treap {
 		// if the Treap is not empty
 		Node curNode = root;
 
-		boolean notExist = false;		// variable to track if the key can be found 
-		
+		boolean notExist = false; // variable to track if the key can be found
+
 		while (notExist != true) {
 			if (curNode.key == key) {
 				return curNode;
@@ -69,9 +71,9 @@ public class Treap {
 					}
 
 				} else if (key > curNode.key) {
-					if(curNode.right != null) {
+					if (curNode.right != null) {
 						curNode = curNode.right;
-					}else {
+					} else {
 						notExist = true;
 					}
 				}
@@ -90,33 +92,72 @@ public class Treap {
 			System.out.println("THe Treap is empty!");
 			return;
 		}
-		
+
 		// find the node
 		Node toDelete = find(key);
-		
+
+		if (toDelete == null) {
+			return;
+		}
+
 		// rotate the node until it is a leaf
-		
+
 		// case 1: if the node is root, then just reset root
 		if (toDelete.equals(root)) {
 			root = null;
 		}
-		
-		// case 2: if the node is already a leaf
-		if (toDelete.left == null && toDelete.right == null) {
-			if(toDelete.key < toDelete.parent.key) {
-				toDelete.parent.left = null;
+
+		while (true) {
+			// case 2: if the node is already a leaf
+			if (toDelete.left == null && toDelete.right == null) {
+				deleteLeaf(toDelete);
+				return;
 			}
+
+			// case 3: if the node is in the middle part of the tree
+
+			// case 3.1: the node only has left child
+			if (toDelete.left != null && toDelete.right == null) {
+				deleteLeft(toDelete);
+				return;
+			}
+			// case 3.2: the node only has right child
+			else if (toDelete.right != null && toDelete.left == null) {
+				deleteRight(toDelete);
+				return;
+			}
+			// case 3.3: the node has two children
 			else {
-				toDelete.parent.right = null;
+				int left_prior = toDelete.left.prio;
+				int right_prior = toDelete.right.prio;
+
+				if (left_prior < right_prior) {
+					leftRotate(toDelete, toDelete.right);
+				} else {
+					rightRotate(toDelete.left, toDelete);
+				}
 			}
 		}
-		
-		// case 3: if the node is in the middle part of the tree
-		// TBA
-		
-		
-		
+	}
 
+	private void deleteRight(Node toDelete) {
+		Node node = toDelete.right;
+		leftRotate(toDelete, node);
+		node.left = null; // cut off the pointer to the node to be deleted
+	}
+
+	public void deleteLeaf(Node toDelete) {
+		if (toDelete.key < toDelete.parent.key) {
+			toDelete.parent.left = null;
+		} else {
+			toDelete.parent.right = null;
+		}
+	}
+
+	public void deleteLeft(Node toDelete) {
+		Node node = toDelete.left;
+		rightRotate(node, toDelete);
+		node.right = null; // cut off the pointer to the node to be deleted
 	}
 
 	// rotates once so that
@@ -182,5 +223,4 @@ public class Treap {
 		y.left = x;
 		x.parent = y;
 	}
-
 }
