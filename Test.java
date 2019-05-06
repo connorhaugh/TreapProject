@@ -7,7 +7,7 @@ public class Test{
 
   Treap treapee;
   RedBlack rbee;
-  LinkedList <Integer> treapKeyTracker = new LinkedList <Integer> ();
+  //LinkedList <Integer> treapKeyTracker = new LinkedList <Integer> ();
   LinkedList <Integer> rbKeyTracker = new LinkedList <Integer> ();
   static UniformDis unifDis;
 
@@ -17,38 +17,18 @@ public class Test{
   }
 
   public static void main(String[] args){
-    int max = 5;
+    int max = 1000000;
     Test t = new Test(max);
 
     unifDis = new UniformDis (max);
 
-    //try {
-      t.treapee.insert(2);
-      t.treapee.insert(3);
-      t.treapee.insert(1);
-      t.treapee.insert(4);
-      t.treapee.insert(0);
-      t.treapee.delete(3);
-      t.treapee.delete(0);
-      t.treapee.delete(1);
-      t.treapee.delete(4);
-      t.treapee.delete(2);
-      t.treapee.insert(2);
-      t.treapee.insert(3);
-      t.treapee.insert(1);
-      t.treapee.insert(4);
-      t.treapee.insert(0);
-      t.treapee.delete(3);
-      t.treapee.delete(0);
-      t.treapee.delete(1);
-      t.treapee.delete(4);
-      t.treapee.delete(2);
-      //t.testTreap(max);
-      //t.testRB(max);
-    //}
-    //catch (IOException io) {
-      //System.out.println ("File not found.");
-    //}
+    try {
+      t.testTreap(max);
+      t.testRB(max);
+    }
+    catch (IOException io) {
+      System.out.println ("File not found.");
+    }
   }
 
 
@@ -62,16 +42,19 @@ public class Test{
     long[][] timeInsert = new long[100][max];
     long[][] timeDelete = new long[100][max];
     for (int i = 0; i < 100; i++) {
-      System.out.println ("Insert iteration " + i);
+      System.out.println ("Treap iteration " + i);
       int[] unifElems= unifDis.generateUniform(max);
       //treapKeyTracker = new LinkedList <Integer> ();
       for (int j = 0; j < max; j++) {
         timeInsert[i][j] = insertTreapTime(unifElems[j]);
       }
-      System.out.println ("Delete iteration " + i);
+      //treapee.printTreap();
+      //System.out.println ("Delete iteration " + i);
+      int[] removeOrder = unifDis.generateUniform(max);
       for (int j = 0; j < max; j++) {
-        timeDelete[i][j] = deleteTreapTime();
+        timeDelete[i][j] = deleteTreapTime(removeOrder, j);
       }
+      //treapee.printTreap();
     }
 
     //Average over 100 iterations at each n value
@@ -100,22 +83,22 @@ public class Test{
     endTime = System.nanoTime();
     runTime = endTime - startTime;
     //keyTracker not factored into runTime
-    treapKeyTracker.add(key);
-    System.out.print (" Treap Insert " + key);
+    //treapKeyTracker.add(key);
+    //System.out.print (" Treap Insert " + key);
     return runTime;
   }
 
-  public long deleteTreapTime () {
+  public long deleteTreapTime (int[] randomOrder, int index) {
     long startTime, endTime, runTime;
     //keyTracker not factored into runTime
-    int randomKey = (int)(treapKeyTracker.size() * Math.random()-1);
-    int blah = treapKeyTracker.remove(randomKey);
+    //int randomKey = (int)(treapKeyTracker.size() * Math.random()-1);
+    //int blah = treapKeyTracker.remove(randomKey);
     startTime = System.nanoTime();
     //Uniformly distributed
-    treapee.delete(randomKey);
+    treapee.delete(randomOrder[index]);
     endTime = System.nanoTime();
     runTime = endTime - startTime;
-    System.out.print (" Treap Delete " + blah);
+    //System.out.print (" Treap Delete " + randomOrder[index]);
     return runTime;
   }
 
@@ -136,8 +119,9 @@ public class Test{
       for (int j = 0; j < max; j++) {
         timeInsert[i][j] = insertRBTime(unifElems[j]);
       }
+      int[] removeOrder = unifDis.generateUniform(max);
       for (int j = 0; j < max; j++) {
-        timeDelete[i][j] = deleteRBTime();
+        timeDelete[i][j] = deleteRBTime(removeOrder, j);
       }
     }
 
@@ -168,21 +152,21 @@ public class Test{
     runTime = endTime - startTime;
     //keyTracker not factored into runTime
     rbKeyTracker.add(key);
-    System.out.print (" RB insert " + key);
+    //System.out.print (" RB insert " + key);
     return runTime;
   }
 
-  public long deleteRBTime () {
+  public long deleteRBTime (int[] randomOrder, int index) {
     long startTime, endTime, runTime;
     //keyTracker not factored into runTime
-    int randomKey = (int)(rbKeyTracker.size() * Math.random()-1);
-    int hi = rbKeyTracker.remove(randomKey);
+    //int randomKey = (int)(rbKeyTracker.size() * Math.random()-1);
+    //int hi = rbKeyTracker.remove(randomKey);
     startTime = System.nanoTime();
     //Uniformly distributed
-    rbee.delete(randomKey);
+    rbee.delete(randomOrder[index]);
     endTime = System.nanoTime();
     runTime = endTime - startTime;
-    System.out.print (" RB delete " + hi);
+    //System.out.print (" RB delete " + hi);
     return runTime;
   }
 
