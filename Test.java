@@ -17,7 +17,7 @@ public class Test{
   }
 
   public static void main(String[] args){
-    int max = 1000000;
+    int max = 100000;
     Test t = new Test(max);
 
     unifDis = new UniformDis (max);
