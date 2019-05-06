@@ -1,243 +1,124 @@
+
 public class Treap {
-	
+
 	TreapNode root;
 
-	// inserts a node
-	public void insert(int key) {
+	// creates a treap node given a key
+	// and inserts the node into the treap
+	public void insert(int key, int prio) {
 
 		// get a randomly generated priority from a uniform distribution.
-		int prio = (int) (2147483647 * Math.random());
+		
+		// comment out the line below for test purposes
+		// int prio = (int) (2147483647 * Math.random());
 
 		TreapNode toAdd = new TreapNode(key, prio);
-		System.out.println(" ( key, prio )  " + key + ", " + prio +" " );
-
-		// if the Treap is empty, set the node to add as the root
-		if (root == null) {
-			root = toAdd;
-			return;
-		}
-
-		// BST insertion
-		TreapNode curNode = root;
-
-		boolean done = false;
-		
-		while (!done) {
-			if (key < curNode.key) {
-				if (curNode.left != null) {
-					curNode = curNode.left;
-				} else {
-					curNode.left = toAdd;
-					toAdd.parent = curNode;
-					done = true;
-				}
-
-			} else {
-				if (curNode.right != null) {
-					curNode = curNode.right;
-				} else {
-					curNode.right = toAdd;
-					toAdd.parent = curNode;
-					done = true;
-				}
-			}
-		}
-
-		// Heap Situp
-
-		while (toAdd != root && toAdd.prio > toAdd.parent.prio) {
-			if (toAdd.key < toAdd.parent.key) { // the new node is a left child
-				rightRotate(toAdd, toAdd.parent);
-			} else {
-				leftRotate(toAdd.parent, toAdd);
-			}
-		}
+		root = insert(toAdd, root);
 	}
 
-	// returns the node given an input key
-	public TreapNode find(int key) {
-		// normal binary search tree-find
+	/**
+	 * recursively insert into a sub-tree
+	 * @param toAdd
+	 *            the node to insert
+	 * @param curRoot
+	 *            the node that is the root of the subtree
+	 */
+	private TreapNode insert(TreapNode toAdd, TreapNode curRoot) {
 
-		// if the Treap is empty
-		if (root == null) {
-			System.out.println("The treap is empty!");
-			return null;
+		if (curRoot == null) {
+			return toAdd;
 		}
 
-		// if the Treap is not empty
-		TreapNode curNode = root;
+		if (toAdd.key < curRoot.key) {
+			curRoot.left = insert(toAdd, curRoot.left);
+			if (curRoot.left.prio > curRoot.prio) {
+				curRoot = rotateRight(curRoot);
+			}
 
-		boolean notExist = false; // variable to track if the key can be found
+		} else {
 
-		while (notExist != true) {
-			if (curNode.key == key) {
-				return curNode;
-			} else {
-				if (key < curNode.key) {
-					if (curNode.left != null) {
-						curNode = curNode.left;
-					} else {
-						notExist = true;
-					}
+			curRoot.right = insert(toAdd, curRoot.right);
 
-				} else if (key > curNode.key) {
-					if (curNode.right != null) {
-						curNode = curNode.right;
-					} else {
-						notExist = true;
-					}
-				}
+			if (curRoot.right.prio > curRoot.prio) {
+				curRoot = rotateLeft(curRoot);
 			}
 		}
 
-		System.out.println("The key is not in the treap!");
-		return null;
+		return curRoot;
 	}
 
-	// deletes the node given an input key
-	public void delete(int key) {
+	public void delete(int key, int prio) {
 
-		// if the Treap is empty
-		if (root == null) {
-			System.out.println("THe Treap is empty!");
-			return;
-		}
+		TreapNode toDelete = new TreapNode(key, prio);
+		root = delete(toDelete, root);
 
-		// find the node
-		TreapNode toDelete = find(key);
+	}
 
-		if (toDelete == null) {
-			return;
-		}
+	/**
+	 * deletes a node from a subtree
+	 * 
+	 * @param toDelete
+	 *            the node to deletes
+	 * @param curRoot
+	 *            the node that is the root of the subtree
+	 * @return the new root of the subtree
+	 */
+	private TreapNode delete(TreapNode toDelete, TreapNode curRoot) {
 
-		// case 1: if the node is root, then just reset root
-		if (toDelete.equals(root)) {
-			root = null;
-			return;
-		}
+		if (curRoot != null) {
 
-		// this loop repeats until the node is deleted
-		while (true) {
-			// case 2: if the node is already a leaf
-			if (toDelete.left == null && toDelete.right == null) {
-				deleteLeaf(toDelete);
-				return;
+			if (toDelete.key < curRoot.key) {
+				curRoot.left = delete(toDelete, curRoot.left);
 			}
 
-			// case 3: if the node is in the middle part of the tree
+			else if (toDelete.key > curRoot.key) {
+				curRoot.right = delete(toDelete, curRoot.right);
+			}
 
-			// case 3.1: the node only has left child
-			if (toDelete.left != null && toDelete.right == null) {
-				deleteLeft(toDelete);
-				return;
-			}
-			// case 3.2: the node only has right child
-			else if (toDelete.right != null && toDelete.left == null) {
-				deleteRight(toDelete);
-				return;
-			}
-			// case 3.3: the node has two children
 			else {
-				int left_prior = toDelete.left.prio;
-				int right_prior = toDelete.right.prio;
+				// find it!
+				if (curRoot.left == null && curRoot.right == null) {
+					curRoot = null;
+				} else if (curRoot.right != null) {
+					curRoot = rotateLeft(curRoot);
+				} else if (curRoot.left != null) {
+					curRoot = rotateRight(curRoot);
+				}
 
-				if (left_prior < right_prior) {
-					leftRotate(toDelete, toDelete.right);
-				} else {
-					rightRotate(toDelete.left, toDelete);
+				else {
+					if (curRoot.left.prio < curRoot.right.prio) {
+						curRoot = rotateLeft(curRoot);
+					} else {
+						curRoot = rotateRight(curRoot);
+					}
+				}
+				if (curRoot != null) { // continue down
+					curRoot = delete(toDelete, curRoot);
 				}
 			}
 		}
+		return curRoot;
 	}
 
-	// deletes a node that is a leaf
-	public void deleteLeaf(TreapNode toDelete) {
-		if (toDelete.key < toDelete.parent.key) {
-			toDelete.parent.left = null;
-		} else {
-			toDelete.parent.right = null;
-		}
+	private TreapNode rotateLeft(TreapNode parent) {
+		TreapNode child = parent.right;
+		TreapNode grandChild = child.left;
+
+		// update the pointers
+		child.left = parent;
+		parent.right = grandChild;
+
+		return child;
 	}
 
-	// deletes a node that has only one child--right child
-	private void deleteRight(TreapNode toDelete) {
-		TreapNode node = toDelete.right;
-		leftRotate(toDelete, node);
-		node.left = null; // cut off the pointer to the node to be deleted
+	private TreapNode rotateRight(TreapNode parent) {
+		TreapNode child = parent.left;
+		TreapNode grandChild = child.right;
+
+		// update the pointers
+		child.right = parent;
+		parent.left = grandChild;
+
+		return child;
 	}
-
-	// deletes a node that has only one child--left child
-	public void deleteLeft(TreapNode toDelete) {
-		TreapNode node = toDelete.left;
-		rightRotate(node, toDelete);
-		node.right = null; // cut off the pointer to the node to be deleted
-	}
-
-	// rotates once so that
-	// originally, x is the left child of y
-	// after rotation, y is the right child of x
-	public void rightRotate(TreapNode x, TreapNode y) {
-
-		// first, check if subtrees exist
-
-		// if x has a right subtree;
-		// update right subtree of x to be left subtree of y
-		if (x.right != null) {
-			x.right.parent = y;
-			y.left = x.right;
-		}
-
-		// update pointers related to grandparent
-		if (y.equals(root)) { // case 1: y is root, i.e. grandparent does not exist
-			x.parent = null;
-			root = x;
-		} else {
-			// case 2: y != root, i.e. y has a parent and grandparent exists
-			x.parent = y.parent;
-			if (y.key < y.parent.key) {
-				y.parent.left = x;
-			} else {
-				y.parent.right = x;
-			}
-		}
-
-		// change pointers of x and y
-		x.right = y;
-		y.parent = x;
-		
-		System.out.println("rightRotation true");
-	}
-
-	// rotates once so that
-	// originally y is the right child of x
-	// after rotation, x is the left child of y
-	public void leftRotate(TreapNode x, TreapNode y) {
-
-		// if y has a left subtree;
-		// update left subtree of y to be right subtree of x
-		if (y.left != null) {
-			y.left.parent = x;
-			x.right = y.left;
-		}
-
-		// update pointers related to grandparent
-		if (x.equals(root)) { // case 1: x is root, i.e. grandparent does not exist
-			y.parent = null;
-			root = y;
-		} else {
-			// case 2: x != root, i.e. x has a parent and grandparent exists
-			y.parent = x.parent;
-			if (x.key < x.parent.key) {
-				x.parent.left = y;
-			} else {
-				x.parent.right = y;
-			}
-		}
-
-		// change pointers of x and y
-		y.left = x;
-		x.parent = y;
-		System.out.println("rightRotation true");
-	}
-
 }
