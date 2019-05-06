@@ -47,11 +47,47 @@ public class Treap {
 		return curRoot;
 	}
 
-	public void delete(int key, int prio) {
+	public void delete(int key) {
 
-		TreapNode toDelete = new TreapNode(key, prio);
-		root = delete(toDelete, root);
+		TreapNode toDelete = find(key);
+		if (toDelete != null) {
+			root = delete(toDelete, root);
+		}
+	}
 
+	public TreapNode find(int key) {
+		TreapNode curRoot = root;
+
+		boolean notFound = true;
+		while (notFound) {
+
+			if (key == curRoot.key) {
+				notFound = false;
+				return curRoot;
+			}
+
+			else if (key < curRoot.key) {
+				if (curRoot.left == null) {
+					System.out.println("NOT IN THE TREAP!");
+					return null;
+				} else {
+					curRoot = curRoot.left;
+				}
+			}
+
+			else {
+
+				if (curRoot.right == null) {
+					System.out.println("NOT IN THE TREAP!");
+					return null;
+				} else {
+					curRoot = curRoot.right;
+
+				}
+
+			}
+		}
+		return null;
 	}
 
 	/**
