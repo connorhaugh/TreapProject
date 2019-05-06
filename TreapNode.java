@@ -11,4 +11,8 @@ public class TreapNode {
 		this.key = key;
 		this.prio = prio;
 	}
+	
+	public String print() {
+		return "node: (" + key + ", " + prio + ")";
+	}
 }
