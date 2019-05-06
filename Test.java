@@ -16,7 +16,7 @@ public class Test{
   }
 
   public static void main(String[] args){
-    int max = 1000000;
+    int max = 100;
     Test t = new Test(max);
 
     UniformDis unifDis = new UniformDis (max);
@@ -41,12 +41,14 @@ public class Test{
     //Array of runtimes per size
     long[][] timeInsert = new long[100][max];
     for (int i = 0; i < 100; i++) {
+      System.out.println ("Treap Insert " + i);
       for (int j = 0; j < max; j++) {
         timeInsert[i][j] = insertTreapTime(elems[j]);
       }
     }
     long[][] timeDelete = new long[100][max];
     for (int i = 0; i < 100; i++) {
+      System.out.println ("Treap Delete " + i);
       for (int j = 0; j < max; j++) {
         timeDelete[i][j] = deleteTreapTime();
       }
@@ -96,7 +98,7 @@ public class Test{
   }
 
 
-  public void testRB (int max, int[] elems){
+  public void testRB (int max, int[] elems) throws IOException {
     File fileRBInsert = new File ("rbInsert.csv");
     File fileRBDelete = new File ("rbDelete.csv");
 
@@ -106,12 +108,14 @@ public class Test{
     //Array of runtimes per size
     long[][] timeInsert = new long[100][max];
     for (int i = 0; i < 100; i++) {
+      System.out.println ("RB Insert " + i);
       for (int j = 0; j < max; j++) {
         timeInsert[i][j] = insertRBTime(elems[j]);
       }
     }
     long[][] timeDelete = new long[100][max];
     for (int i = 0; i < 100; i++) {
+      System.out.println ("RB Delete " + i);
       for (int j = 0; j < max; j++) {
         timeDelete[i][j] = deleteRBTime();
       }
