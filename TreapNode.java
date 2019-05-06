@@ -1,17 +1,18 @@
-
 public class TreapNode {
-
-	// five fields of a single node
+	
 	int key;
 	int prio;
 	
 	TreapNode left;
 	TreapNode right;
-	TreapNode parent;
 	
-	// constructor, initializes a node
 	public TreapNode(int key, int prio) {
 		this.key = key;
-		this.prio = prio; 
+		this.prio = prio;
+	}
+	
+	// this method is for test purposes
+	public String print() {
+		return key + ", " + prio;
 	}
 }
