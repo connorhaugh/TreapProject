@@ -5,12 +5,12 @@ public class Treap {
 
 	// creates a treap node given a key
 	// and inserts the node into the treap
-	public void insert(int key, int prio) {
+	public void insert(int key) {
 
 		// get a randomly generated priority from a uniform distribution.
 		
 		// comment out the line below for test purposes
-		// int prio = (int) (2147483647 * Math.random());
+		int prio = (int) (2147483647 * Math.random());
 
 		TreapNode toAdd = new TreapNode(key, prio);
 		root = insert(toAdd, root);
