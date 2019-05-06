@@ -198,4 +198,32 @@ public class Treap {
 		}
 		return curRoot;
 	}
+	
+	 /**
+     * Print the tree contents in sorted order.
+     */
+    public void printTreap( )
+    {
+        if( root == null )
+            System.out.println( "Empty tree" );
+        else
+            printTree( root );
+    }
+    
+    /**
+     * Internal method to print a subtree in sorted order.
+     * @param t the node that roots the tree.
+     */
+    private void printTree( TreapNode curRoot )
+    {
+        if (curRoot.left != null) {
+        	printTree( curRoot.left );
+        }
+        System.out.println( curRoot.print() );
+        
+    	if (curRoot.right != null) {
+    		printTree( curRoot.right );	
+    	}
+    }
+	
 }
