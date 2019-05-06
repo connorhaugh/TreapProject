@@ -77,18 +77,18 @@ public class Treap {
 
 			else {
 				// find it!
-				if (curRoot.left == null && curRoot.right == null) {
+				
+				if (curRoot.left == null && curRoot.right == null) {	// it is a leaf
 					curRoot = null;
-				} else if (curRoot.right != null) {
+				} else if (curRoot.right != null) {	// it is a single-right-child's parent
 					curRoot = rotateLeft(curRoot);
-				} else if (curRoot.left != null) {
+				} else if (curRoot.left != null) {	// it is a single-left-child's parent
 					curRoot = rotateRight(curRoot);
 				}
-
-				else {
-					if (curRoot.left.prio < curRoot.right.prio) {
+				else {	// it has two children, then compare children's priorities
+					if (curRoot.left.prio < curRoot.right.prio) {	 
 						curRoot = rotateLeft(curRoot);
-					} else {
+					} else {	
 						curRoot = rotateRight(curRoot);
 					}
 				}
@@ -100,6 +100,8 @@ public class Treap {
 		return curRoot;
 	}
 
+	// rotates the parent and its right child
+	// returns the right 
 	private TreapNode rotateLeft(TreapNode parent) {
 		TreapNode child = parent.right;
 		TreapNode grandChild = child.left;
