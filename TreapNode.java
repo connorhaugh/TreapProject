@@ -1,6 +1,5 @@
 public class TreapNode {
-
-	TreapNode root;
+	
 	int key;
 	int prio;
 
