@@ -8,7 +8,7 @@ public class UniformDis {
   }
 
   public int[] generateUniform (int max) {
-    int[] elems = new elems[max];
+    int[] elems = new int[max];
     for (int i = 0; i < max; i++) {
       elems[i] = i;
     }
